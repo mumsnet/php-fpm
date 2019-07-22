@@ -21,7 +21,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Configure FPM
 RUN sed -i 's%;ping\.path.*$%ping.path = /fpm-ping%' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's%;status\.path.*$%status.path = /fpm-status%' /usr/local/etc/php-fpm.d/www.conf
+    && sed -i 's%;status\.path.*$%status.path = /fpm-status%' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's%^access.log%;access.log%' /usr/local/etc/php-fpm.d/docker.conf
 
 # Configure supervisord
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -39,8 +40,10 @@ RUN curl --silent --show-error https://getcomposer.org/installer \
 # so you can run things like lumen directly on the command line
 ENV PATH $PATH:/root/.composer/vendor/bin
 
+EXPOSE 8080
+
 # Let supervisord start nginx & php-fpm
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 
 # Configure a healthcheck to validate that everything is up & running
 HEALTHCHECK --timeout=10s CMD curl --silent --output /dev/null --fail http://127.0.0.1:8080/fpm-ping
