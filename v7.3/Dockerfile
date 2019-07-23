@@ -28,6 +28,7 @@ RUN sed -i 's%;ping\.path.*$%ping.path = /fpm-ping%' /usr/local/etc/php-fpm.d/ww
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Ensure the html folder is owned by www-data
+RUN mkdir -p /var/www/html/public
 RUN chown -R www-data:www-data /var/www/html
 
 # Install composer
