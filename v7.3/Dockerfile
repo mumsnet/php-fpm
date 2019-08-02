@@ -18,6 +18,8 @@ RUN apt-get update \
 
 # Configure nginx
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY configure_nginx_for_assets.sh /usr/local/bin
+RUN chmod 755 /usr/local/bin/configure_nginx_for_assets.sh
 
 # Configure FPM
 RUN sed -i 's%;ping\.path.*$%ping.path = /fpm-ping%' /usr/local/etc/php-fpm.d/www.conf \
