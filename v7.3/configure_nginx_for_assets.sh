@@ -28,9 +28,9 @@ if [ "$DEPLOY_ENV" != "dev" -a "$DEPLOY_ENV" != "prod" ]; then
   exit 1
 fi
 
-MAX_AGE=31536000
+MAX_AGE="max-age=31536000"
 if [ "$DEPLOY_ENV" == "dev" ]; then
-  MAX_AGE="no-store"
+  MAX_AGE="no-store, must-revalidate"
 fi
 
 echo "Configuring nginx to strip the prefix before serving assets:"
@@ -42,5 +42,5 @@ sed -i \
   -e "s%SRV_URL_PREFIX%$SRV_URL_PREFIX%g" \
   -e "s%ASSET_PATTERNS%$ASSET_PATTERNS%g" \
   -e "s%MANIFEST_PATTERNS%$MANIFEST_PATTERNS%g" \
-  -e "s%31536000%$MAX_AGE%g" \
+  -e "s%max-age=31536000%$MAX_AGE%g" \
   /etc/nginx/nginx.conf
