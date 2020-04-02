@@ -4,6 +4,7 @@ FROM php:7.3-fpm
 # and install required PHP extensions
 RUN apt-get update \
     && apt-get install -y libbz2-dev libxslt-dev libzip-dev nginx supervisor zip \
+    && docker-php-ext-configure opcache --enable-opcache \
     && docker-php-ext-configure zip --with-libzip \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install bz2 \
@@ -11,10 +12,14 @@ RUN apt-get update \
     && docker-php-ext-install exif \
     && docker-php-ext-install gettext \
     && docker-php-ext-install mysqli \
+    && docker-php-ext-install opcache \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install sockets \
     && docker-php-ext-install xsl \
     && docker-php-ext-install zip
+
+# Configure opcache
+COPY opcache.ini $PHP_INI_DIR/conf.d/
 
 # Configure nginx
 COPY nginx.conf /etc/nginx/nginx.conf
